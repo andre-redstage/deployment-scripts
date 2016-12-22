@@ -1,0 +1,41 @@
+#!/bin/sh
+BASE_DIR="/www/sites/uat.travisplatform/files/"
+
+HTML='html'
+v1='v1'
+v2='v2'
+GIT='git/'
+STATIC_VAR='static/var'
+STATIC_MEDIA='static/media'
+STATIC_LOCALXML='static/app/etc/local.xml'
+STATIC_HTACCESS='static/.htaccess'
+
+CURRENT_LINK="$(readlink $BASE_DIR$HTML)"
+
+CHECKOUT_DIR=$BASE_DIR$v1
+
+if [ '"'$CURRENT_LINK'"' = '"'$CHECKOUT_DIR'"' ];
+then
+        CHECKOUT_DIR=$BASE_DIR$v2
+fi
+
+git --work-tree=$CHECKOUT_DIR --git-dir=$BASE_DIR$GIT checkout -f
+
+#Clear static links
+rm -rf $CHECKOUT_DIR'/var'
+rm -rf $CHECKOUT_DIR'/media'
+rm -rf $CHECKOUT_DIR'/app/etc/local.xml'
+rm -rf $CHECKOUT_DIR'/.htaccess'
+
+#Clear cache
+rm -rf $BASE_DIR$STATIC_VAR'/cache/*'
+
+#Clear application link
+rm -rf $BASE_DIR$HTML
+
+#Create links for new folder
+ln -s $CHECKOUT_DIR $BASE_DIR$HTML
+ln -s $BASE_DIR$STATIC_VAR $CHECKOUT_DIR'/var'
+ln -s $BASE_DIR$STATIC_MEDIA $CHECKOUT_DIR'/media'
+ln -s $BASE_DIR$STATIC_LOCALXML $CHECKOUT_DIR'/app/etc/local.xml'
+ln -s $BASE_DIR$STATIC_HTACCESS $CHECKOUT_DIR'/.htaccess'

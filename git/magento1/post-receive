@@ -21,6 +21,10 @@ fi
 
 git --work-tree=$CHECKOUT_DIR --git-dir=$BASE_DIR$GIT checkout -f
 
+# If it's not master add the branch name like this:
+# git --work-tree=$CHECKOUT_DIR --git-dir=$BASE_DIR$GIT checkout BRANCH_NAME -f
+# git --work-tree=$CHECKOUT_DIR --git-dir=$BASE_DIR$GIT checkout develop -f
+
 #Clear static links
 rm -rf $CHECKOUT_DIR'/var'
 rm -rf $CHECKOUT_DIR'/media'
